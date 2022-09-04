@@ -1,6 +1,5 @@
 :: Wrapper: Offline Launcher
 :: Author: benson#0411
-:: Modified by KrisAnimate#2212
 :: License: MIT
 
 ::::::::::::::::::::
@@ -692,12 +691,10 @@ if !CEPSTRAL!==n (
 pushd utilities
 if !VERBOSEWRAPPER!==y (
 	if !DRYRUN!==n ( start /MIN open_http-server.bat )
-	if !DRYRUN!==n ( start /MIN open_http-server_2.bat )
 	if !DRYRUN!==n ( start /MIN open_nodejs.bat )
 	if !DRYRUN!==n ( start /MIN open_vfproxy_php.bat )
 ) else (
 	if !DRYRUN!==n ( start SilentCMD open_http-server.bat )
-	if !DRYRUN!==n ( start SilentCMD open_http-server_2.bat )
 	if !DRYRUN!==n ( start SilentCMD open_nodejs.bat )
 	if !DRYRUN!==n ( start SilentCMD open_vfproxy_php.bat )
 	)
@@ -747,8 +744,6 @@ if exist .git (
 )
 echo Enter clr to clean up the screen
 echo Enter 0 to close Wrapper: Offline
-set /a _rand=(!RANDOM!*67/32768)+1
-if !_rand!==25 echo Enter things you think'll show a secret if you're feeling adventurous
 if !DEVMODE!==y (
 	echo:
 	echo Developer options:
@@ -779,20 +774,12 @@ if /i "!choice!"=="clr" goto wrapperstartedcls
 if /i "!choice!"=="cls" goto wrapperstartedcls
 if /i "!choice!"=="clear" goto wrapperstartedcls
 :: dev options
-if !DEVMODE!==y (
-	if /i "!choice!"=="server" goto open_server
-	if /i "!choice!"=="amnesia" goto wipe_save
-	if /i "!choice!"=="restart" goto restart
-	if /i "!choice!"=="reload" goto reload_settings
-	if /i "!choice!"=="folder" goto open_files
-)
-if !DEVMODE!==n (
-	if /i "!choice!"=="server" goto open_server
-	if /i "!choice!"=="amnesia" goto devmodeerror
-	if /i "!choice!"=="restart" goto devmodeerror
-	if /i "!choice!"=="reload" goto devmodeerror
-	if /i "!choice!"=="folder" goto devmodeerror
-)
+if /i "!choice!"=="server" goto open_server
+if /i "!choice!"=="amnesia" goto wipe_save
+if /i "!choice!"=="restart" goto restart
+if /i "!choice!"=="reload" goto reload_settings
+if /i "!choice!"=="folder" goto open_files
+
 echo Time to choose. && goto wrapperidle
 
 :reopen_webpage	
@@ -885,13 +872,6 @@ if !VERBOSEWRAPPER!==y (
 )
 start "" /wait /B "%~F0" point_insertion
 exit
-
-:devmodeerror
-echo You have to have developer mode on
-echo in order to access these features.
-echo:
-echo Please turn developer mode on in the settings, then try again.
-goto wrapperidle
 
 ::::::::::::::
 :: Shutdown ::
@@ -1064,8 +1044,8 @@ goto returnfromconfigcopy
 :envcopy
 	set ENV=wrapper\env.json
 	echo {>> !env!
-	echo 	"CHAR_BASE_URL": "https://localhost:4664/characters",>> !env!
-	echo 	"THUMB_BASE_URL": "https://localhost:4664/thumbnails",>> !env!
+	echo 	"CHAR_BASE_URL": "https://127.0.0.1:4664/characters",>> !env!
+	echo 	"THUMB_BASE_URL": "https://127.0.0.1:4664/thumbnails",>> !env!
 	echo 	"XML_HEADER": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n",>> !env!
 	echo 	"CROSSDOMAIN": "<cross-domain-policy><allow-access-from domain=\"*\"/></cross-domain-policy>",>> !env!
 	echo 	"FILE_WIDTH": 1000,>> !env!
@@ -1086,7 +1066,7 @@ goto returnfromconfigcopy
 	echo 	"RPC": "!RPC!",>> !env!
 	echo 	"DARK_MODE": "!DARK_MODE!",>> !env!
 	echo 	"DEBUG_VM": "!DEBUG_VM!",>> !env!
-	echo 	"TRUNCATE_THEMES": "!TRUNCATE_THEMES!">> !env!
+	echo 	"TRUNCATE_THEMES": "!TRUNCATE_THEMES!",>> !env!
 	echo }>> !env!
 goto returnfromenvcopy
 
